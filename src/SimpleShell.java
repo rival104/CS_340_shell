@@ -11,7 +11,7 @@ public class SimpleShell {
 		CommandLogs history = new CommandLogs();
 		CommandProcessor cp = new CommandProcessor();
 		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
-
+		
 		// we break out with <control><C>
 		while (true) {
 			list = new ArrayList<String>();
@@ -20,17 +20,18 @@ public class SimpleShell {
 
 			// read a input line
 			commandLine = console.readLine();
+			if(commandLine == null) break;//avoid nullpointer Exception;
 			
 			//History
 			try {
-				if(commandLine.startsWith("!")) {
+				if(commandLine.startsWith("!") && commandLine != null) {
 					commandLine = history.getLog(commandLine);
 				}else {
 					history.add(commandLine);
 				}
 			} catch (Exception e) {
 				commandLine = "";
-				System.err.println("History log not found!");
+				System.err.println(e.getMessage());
 			}	
 			
 			
@@ -43,7 +44,7 @@ public class SimpleShell {
 			//process command
 			if (commandLine.equals(""))
 				continue;
-			else if (commandLine.equals("history"))
+			else if (commandLine.equalsIgnoreCase("history"))
 				System.out.println(history);
 			else {
 				cp.process(list);
